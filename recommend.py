@@ -17,6 +17,7 @@ conn = mysql.connector.connect(
     user=DB_USER,
     password=DB_PASSWORD,
     database=DB_NAME 
+)
 
 # Data ko MySQL se seedha pandas mein le aao
 ratings_df = pd.read_sql("SELECT * FROM ratings", conn)
@@ -69,4 +70,4 @@ if __name__ == "__main__":
     user_id = 1
     print(f"User {user_id} ke liye recommended movies:\n")
     for movie in recommend_movies(user_id):
-        print(f"🎥 {movie}")
+       print(f"🎥 {movie}")

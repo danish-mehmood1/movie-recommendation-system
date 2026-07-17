@@ -11,6 +11,15 @@ conn = get_connection()
 ratings_df = pd.read_sql("SELECT * FROM ratings", conn)
 movies_df = pd.read_sql("SELECT * FROM movies", conn)
 
+ratings_df = ratings_df.rename(columns={
+    "userId": "user_id",
+    "movieId": "movie_id"
+})
+
+movies_df = movies_df.rename(columns={
+    "movieId": "movie_id"
+})
+
 conn.close()
 
 # -----------------------------
