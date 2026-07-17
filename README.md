@@ -43,13 +43,7 @@ The web application is built using **Streamlit** and deployed online for public 
 
 # 📸 Application Preview
 
-> Replace this section with a screenshot of your application.
-
-```
-assets/app.png
-```
-
----
+![Movie Recommendation System](assets/app.png)
 
 # 🛠 Tech Stack
 
