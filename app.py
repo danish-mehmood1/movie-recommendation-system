@@ -1,43 +1,152 @@
 import streamlit as st
 from recommend import recommend_movies
 
-# Page ka title aur icon set karo
-st.set_page_config(page_title="Movie Recommender", page_icon="🎬")
+# -----------------------------
+# Page Configuration
+# -----------------------------
+st.set_page_config(
+    page_title="Movie Recommendation System",
+    page_icon="🎬",
+    layout="wide"
+)
 
-# Heading
+# -----------------------------
+# Sidebar
+# -----------------------------
+st.sidebar.title("🎬 Movie Recommendation")
+
+st.sidebar.markdown("---")
+
+st.sidebar.subheader("📖 About")
+
+st.sidebar.write(
+    """
+This application recommends movies using
+**Collaborative Filtering**.
+
+The recommendation engine is built with:
+
+- 🐍 Python
+- 🎨 Streamlit
+- 🗄️ MySQL
+- 📊 Pandas
+- 🤖 Scikit-learn
+"""
+)
+
+st.sidebar.markdown("---")
+
+st.sidebar.subheader("📊 Dataset")
+
+st.sidebar.write("""
+- 🎥 Movies: **9,742**
+- ⭐ Ratings: **100,836**
+- 👥 Users: **610**
+""")
+
+st.sidebar.markdown("---")
+
+st.sidebar.success("✅ Portfolio Project")
+
+# -----------------------------
+# Main Title
+# -----------------------------
 st.title("🎬 Movie Recommendation System")
-st.write("MySQL + Python + Collaborative Filtering se bana hua project")
+
+st.markdown(
+"""
+### Discover Movies You'll Love
+
+This project recommends movies based on **Collaborative Filtering** using the **MovieLens Dataset**.
+
+It analyzes users with similar preferences and recommends movies they enjoyed.
+"""
+)
 
 st.divider()
 
-# User se input lo
-st.subheader("Apna User ID daalo")
-user_id = st.number_input(
-    "User ID (1 se 610 tak koi bhi number)", 
-    min_value=1, 
-    max_value=610, 
-    value=1,
-    step=1
-)
+# -----------------------------
+# Input Section
+# -----------------------------
+left, right = st.columns([2, 1])
 
-# Button
-if st.button("🔍 Recommend Movies"):
+with left:
+
+    st.subheader("👤 Select User")
+
+    st.write(
+        "Choose a User ID between **1** and **610** to receive personalized movie recommendations."
+    )
+
+    user_id = st.number_input(
+        "User ID",
+        min_value=1,
+        max_value=610,
+        value=1,
+        step=1
+    )
+
+with right:
+
+    st.metric("Users", "610")
+    st.metric("Movies", "9,742")
+    st.metric("Ratings", "100,836")
+
+st.divider()
+
+# -----------------------------
+# Recommendation Button
+# -----------------------------
+if st.button("🎬 Recommend Movies", use_container_width=True):
+
     try:
-        with st.spinner("Finding recommendations..."):
+
+        with st.spinner("Generating recommendations..."):
+
             recommendations = recommend_movies(user_id)
 
         if recommendations:
-            st.success(f"Found {len(recommendations)} recommended movies!")
 
-            st.subheader("Recommended Movies")
+            st.success("Recommendations generated successfully!")
+
+            st.markdown("## 🍿 Recommended Movies")
 
             for i, movie in enumerate(recommendations, start=1):
-                st.write(f"**{i}.** 🎥 {movie}")
+
+                st.markdown(
+                    f"""
+### {i}. 🎥 {movie}
+"""
+                )
+
         else:
+
             st.warning("No recommendations found for this user.")
 
     except Exception as e:
-        st.error(f"An error occurred: {e}")
+
+        st.error(f"❌ {e}")
 
 st.divider()
-st.caption("Made with MySQL, Python, Pandas & Scikit-learn")
+
+# -----------------------------
+# Footer
+# -----------------------------
+st.markdown(
+"""
+### 🚀 Technologies Used
+
+- Python
+- Streamlit
+- MySQL
+- Pandas
+- Scikit-learn
+- Collaborative Filtering
+"""
+)
+
+st.divider()
+
+st.caption(
+    "Developed by Danish Mehmood | Movie Recommendation System | 2026"
+)
