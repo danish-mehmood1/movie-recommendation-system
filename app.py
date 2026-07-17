@@ -1,6 +1,5 @@
 import streamlit as st
-from recommend import recommend_movies
-
+from recommendation.engine import recommend_movies
 # -----------------------------
 # Page Configuration
 # -----------------------------
