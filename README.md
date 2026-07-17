@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="assets/banner.png" width="100%" alt="Movie Recommendation System Banner">
+</p>
 <div align="center">
 
 # 🎬 Movie Recommendation System
