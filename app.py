@@ -1,151 +1,102 @@
 import streamlit as st
+
 from recommendation.engine import recommend_movies
-# -----------------------------
-# Page Configuration
-# -----------------------------
+from components.sidebar import render_sidebar
+from components.hero import render_hero
+from components.movie_card import render_movie_card
+from components.footer import render_footer
+from components.explorer import render_explorer
+
+
+# --------------------------------------------------
+# Page Config
+# --------------------------------------------------
 st.set_page_config(
     page_title="Movie Recommendation System",
     page_icon="🎬",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-# -----------------------------
-# Sidebar
-# -----------------------------
-st.sidebar.title("🎬 Movie Recommendation")
 
-st.sidebar.markdown("---")
+# --------------------------------------------------
+# Load CSS
+# --------------------------------------------------
+def load_css(path):
+    with open(path) as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-st.sidebar.subheader("📖 About")
 
-st.sidebar.write(
-    """
-This application recommends movies using
-**Collaborative Filtering**.
+load_css("assets/styles.css")
 
-The recommendation engine is built with:
 
-- 🐍 Python
-- 🎨 Streamlit
-- 🗄️ MySQL
-- 📊 Pandas
-- 🤖 Scikit-learn
-"""
-)
+# --------------------------------------------------
+# Sidebar + Hero
+# --------------------------------------------------
+render_sidebar()
+render_hero()
 
-st.sidebar.markdown("---")
 
-st.sidebar.subheader("📊 Dataset")
+# --------------------------------------------------
+# Tabs
+# --------------------------------------------------
+tab1, tab2 = st.tabs(["🎯 Recommendations", "🔍 Explore Movies"])
 
-st.sidebar.write("""
-- 🎥 Movies: **9,742**
-- ⭐ Ratings: **100,836**
-- 👥 Users: **610**
-""")
 
-st.sidebar.markdown("---")
+# --------------------------------------------------
+# Tab 1: Recommendations
+# --------------------------------------------------
+with tab1:
 
-st.sidebar.success("✅ Portfolio Project")
+    col1, col2, col3 = st.columns([2, 1, 1])
 
-# -----------------------------
-# Main Title
-# -----------------------------
-st.title("🎬 Movie Recommendation System")
+    with col1:
+        user_id = st.number_input(
+            "👤 Enter User ID (1–610)",
+            min_value=1,
+            max_value=610,
+            value=1,
+            step=1
+        )
 
-st.markdown(
-"""
-### Discover Movies You'll Love
+    with col2:
+        st.metric("Engine", "Collaborative Filtering")
 
-This project recommends movies based on **Collaborative Filtering** using the **MovieLens Dataset**.
+    with col3:
+        st.metric("Status", "🟢 Online")
 
-It analyzes users with similar preferences and recommends movies they enjoyed.
-"""
-)
+    recommend_clicked = st.button("🎬 Recommend Movies", use_container_width=True)
 
-st.divider()
+    st.divider()
 
-# -----------------------------
-# Input Section
-# -----------------------------
-left, right = st.columns([2, 1])
+    if recommend_clicked:
 
-with left:
+        try:
+            with st.spinner("Finding movies for you..."):
+                recommendations = recommend_movies(user_id)
 
-    st.subheader("👤 Select User")
+            if recommendations:
+                st.success(f"Found {len(recommendations)} recommendations!")
+                st.subheader("🍿 Recommended For You")
 
-    st.write(
-        "Choose a User ID between **1** and **610** to receive personalized movie recommendations."
-    )
+                for index, movie in enumerate(recommendations, start=1):
+                    render_movie_card(movie, index)
 
-    user_id = st.number_input(
-        "User ID",
-        min_value=1,
-        max_value=610,
-        value=1,
-        step=1
-    )
+            else:
+                st.warning("No recommendations found for this user.")
 
-with right:
+        except Exception as e:
+            st.error(f"❌ Error: {e}")
 
-    st.metric("Users", "610")
-    st.metric("Movies", "9,742")
-    st.metric("Ratings", "100,836")
 
-st.divider()
+# --------------------------------------------------
+# Tab 2: Explore Movies
+# --------------------------------------------------
+with tab2:
+    render_explorer()
 
-# -----------------------------
-# Recommendation Button
-# -----------------------------
-if st.button("🎬 Recommend Movies", use_container_width=True):
 
-    try:
-
-        with st.spinner("Generating recommendations..."):
-
-            recommendations = recommend_movies(user_id)
-
-        if recommendations:
-
-            st.success("Recommendations generated successfully!")
-
-            st.markdown("## 🍿 Recommended Movies")
-
-            for i, movie in enumerate(recommendations, start=1):
-
-                st.markdown(
-                    f"""
-### {i}. 🎥 {movie}
-"""
-                )
-
-        else:
-
-            st.warning("No recommendations found for this user.")
-
-    except Exception as e:
-
-        st.error(f"❌ {e}")
-
-st.divider()
-
-# -----------------------------
+# --------------------------------------------------
 # Footer
-# -----------------------------
-st.markdown(
-"""
-### 🚀 Technologies Used
-
-- Python
-- Streamlit
-- MySQL
-- Pandas
-- Scikit-learn
-- Collaborative Filtering
-"""
-)
-
-st.divider()
-
-st.caption(
-    "Developed by Danish Mehmood | Movie Recommendation System | 2026"
-)
+# --------------------------------------------------
+render_footer()

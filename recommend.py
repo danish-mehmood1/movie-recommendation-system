@@ -16,8 +16,7 @@ conn = mysql.connector.connect(
     host=DB_HOST,
     user=DB_USER,
     password=DB_PASSWORD,
-    database=DB_NAME
-)
+    database=DB_NAME 
 
 # Data ko MySQL se seedha pandas mein le aao
 ratings_df = pd.read_sql("SELECT * FROM ratings", conn)
