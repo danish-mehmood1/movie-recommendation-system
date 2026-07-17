@@ -22,14 +22,22 @@ user_id = st.number_input(
 
 # Button
 if st.button("🔍 Recommend Movies"):
-    with st.spinner("Recommendations dhoondh rahe hain..."):
-        recommendations = recommend_movies(user_id)
-    
-    st.success(f"User {user_id} ke liye top {len(recommendations)} movies mil gayi!")
-    
-    st.subheader("Tumhare liye Recommended Movies:")
-    for i, movie in enumerate(recommendations, start=1):
-        st.write(f"**{i}.** 🎥 {movie}")
+    try:
+        with st.spinner("Finding recommendations..."):
+            recommendations = recommend_movies(user_id)
+
+        if recommendations:
+            st.success(f"Found {len(recommendations)} recommended movies!")
+
+            st.subheader("Recommended Movies")
+
+            for i, movie in enumerate(recommendations, start=1):
+                st.write(f"**{i}.** 🎥 {movie}")
+        else:
+            st.warning("No recommendations found for this user.")
+
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
 
 st.divider()
 st.caption("Made with MySQL, Python, Pandas & Scikit-learn")

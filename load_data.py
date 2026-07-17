@@ -1,18 +1,27 @@
+from dotenv import load_dotenv
+import os
 import pandas as pd
 import mysql.connector
 
+load_dotenv()
+
+DB_HOST = os.getenv("DB_HOST")
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_NAME = os.getenv("DB_NAME")
+
 # MySQL se connect karo
 conn = mysql.connector.connect(
-    host="localhost",
-    user="root",           # tumhara MySQL username
-    password="Password",  # apna actual password daalo
-    database="movie_recommender"
+    host=DB_HOST,
+    user=DB_USER,
+    password=DB_PASSWORD,
+    database=DB_NAME
 )
 cursor = conn.cursor()
 
 # CSV files padho
-movies_df = pd.read_csv("movies.csv")
-ratings_df = pd.read_csv("ratings.csv")
+movies_df = pd.read_csv("data/movies.csv")
+ratings_df = pd.read_csv("data/ratings.csv")
 
 # Movies table mein data daalo
 for i, row in movies_df.iterrows():
